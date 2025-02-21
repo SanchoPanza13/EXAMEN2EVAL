@@ -48,7 +48,7 @@ public class AudioManager : MonoBehaviour
         return audioSource;
     }
 
-    IEnumerator WaitAudioEnd(AudioSource src)
+    public IEnumerator WaitAudioEnd(AudioSource src)
     {
         while(src && src.isPlaying)
         {
