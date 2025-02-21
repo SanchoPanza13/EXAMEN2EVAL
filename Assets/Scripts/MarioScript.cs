@@ -17,6 +17,8 @@ public class MarioScript : MonoBehaviour
     private Animator _animator;
     private Vector2 dir;
     private bool _intentionToJump;
+    public int _currentJump = 1;
+    public int maxJumpPossible = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -79,21 +81,22 @@ public class MarioScript : MonoBehaviour
         rb.velocity = nVel;
 
 
-        if (_intentionToJump && grnd)
+        if (_intentionToJump && (grnd))
         {
             _animator.Play("jumpAnimation");
             AddJumpForce();
+            _currentJump = 1;
         }
+
+        if (_intentionToJump && (!grnd) && _currentJump < maxJumpPossible)
+        {
+            AddJumpForce();
+            _currentJump++;
+        }
+
         _intentionToJump = false;
 
         _animator.SetBool("isGrounded", grnd);
-    }
-
-    public void AddJumpForce()
-    {
-        rb.velocity = new Vector2(rb.velocity.x, 0);
-        rb.AddForce(Vector2.up * jumpForce * rb.gravityScale, ForceMode2D.Impulse);
-        AudioManager.instance.PlayAudio(jumpClip, "jumpSound");
     }
 
     private bool IsGrounded()
@@ -105,6 +108,17 @@ public class MarioScript : MonoBehaviour
         }
         return false;
     }
+
+
+
+    public void AddJumpForce()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, 0);
+        rb.AddForce(Vector2.up * jumpForce * rb.gravityScale, ForceMode2D.Impulse);
+        AudioManager.instance.PlayAudio(jumpClip, "jumpSound");
+    }
+
+    
 
     private void OnDrawGizmos()
     {
